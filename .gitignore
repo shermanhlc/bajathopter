@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# esp-idf
+build/
+*.old
