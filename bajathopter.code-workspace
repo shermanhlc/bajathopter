@@ -1,0 +1,38 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "banshee"
+		},
+		{
+			"path": "beacon"
+		},
+		{
+			"path": "core"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"stdio.h": "c",
+			"fart.h": "c",
+			"esp_wifi.h": "c",
+			"esp_wifi_default.h": "c"
+		},
+
+		"terminal.integrated.profiles.osx": {
+			"esp-idf": {
+				"path": "/bin/zsh",
+				"args": ["-c", ". $HOME/tools/esp/v5.1/esp-idf/export.sh; exec zsh"]
+			}
+		},
+		"terminal.integrated.defaultProfile.osx": "esp-idf",
+
+		"cmake.configureSettings": {
+			"CMAKE_TOOLCHAIN_FILE": "${env:IDF_PATH}/tools/cmake/toolchain-esp32.cmake"
+		},
+		
+		"cmake.ignoreCMakeListsMissing": true,
+	}
+}

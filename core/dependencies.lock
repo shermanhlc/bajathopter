@@ -3,15 +3,8 @@ dependencies:
     source:
       type: idf
     version: 5.1.4
-  nimble_central_utils:
-    dependencies: []
-    source:
-      path: /Users/sherman/tools/esp/v5.1/esp-idf/examples/bluetooth/nimble/common/nimble_central_utils
-      type: local
-    version: '*'
 direct_dependencies:
 - idf
-- nimble_central_utils
-manifest_hash: 01c7f0c97d0ac4d55814d1a423d47be4697b8b00efd24436f18ba7accdf62f3d
+manifest_hash: 439cbe6a9626f3738944d11ff714613066bd4b0d0e58b3b8a4ee6df0b5616fbb
 target: esp32c3
 version: 2.0.0

@@ -4,7 +4,5 @@ set(SOURCES
 
 idf_component_register(SRCS ${SOURCES}
                     INCLUDE_DIRS "inc"
-                    #REQUIRES esp_wifi
-                    REQUIRES nvs_flash
-                    REQUIRES bt
+                    REQUIRES esp_wifi
                     )
