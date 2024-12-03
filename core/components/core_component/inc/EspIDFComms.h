@@ -13,10 +13,10 @@ namespace comms {
             EspIDFComms(wifi_config_t wifi_config, wifi_mode_t mode = WIFI_MODE_NULL);
             // EspIDFComms(std::sring& ssid, std::string& password, wifi_mode_t mode = WIFI_MODE_NULL)
 
-            ~EspIDFComms();
+            ~EspIDFComms() = default;
 
             /**
-             * @brief Starts the wifi interface based on the type (station/AP)
+             * @brief Starts the wifi interface based on the type (station/AP). If the function fails, it will abort.
              * 
              * @return
              *    - ESP_OK: succeed
@@ -29,7 +29,7 @@ namespace comms {
             esp_err_t StartWifi() override;
 
             /**
-             * @brief Stops the wifi interface
+             * @brief Stops the wifi interface. If it fails, it will not abort.
              * 
              * @return
              *    - ESP_OK: succeed
@@ -38,6 +38,8 @@ namespace comms {
             esp_err_t StopWifi() override;
 
             esp_err_t ConnectToAccessPoint() override;
+            void SetPowerSavingMode(PowerMode mode);
+            void SetMode(Mode mode);
 
         private:
             void HandleEvent(void* arg, esp_event_base_t eventBase, int32_t eventId, void* eventData);

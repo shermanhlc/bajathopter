@@ -4,9 +4,11 @@
 #include "fart.h"
 #include "EspIDFComms.h"
 
+using namespace comms;
+
 extern "C" void app_main() 
 {
     hello();
     wifi_config_t wc;
-    comms::EspIDFComms eic = EspIDFComms(wc, WIFI_MODE_AP);
+    EspIDFComms eic = EspIDFComms(wc, WIFI_MODE_AP);
 }
