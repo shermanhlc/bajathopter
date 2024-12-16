@@ -28,9 +28,9 @@ void event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, 
             break;
         case MQTT_EVENT_SUBSCRIBED:
             ESP_LOGI(TAG, "MQTT Subscribed");
-            //esp_mqtt_client_subscribe(client, "/topic/sensors", 1);
             break;
         case MQTT_EVENT_DATA:
+            // Handle data received from subscribed topic
             ESP_LOGI(TAG, "MQTT DATA");
             const cJSON *id = NULL;
             const cJSON *value = NULL;
@@ -47,9 +47,9 @@ void event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, 
             xQueueSendFromISR(xQueue, &message, portMAX_DELAY);
             break;
         case MQTT_EVENT_ERROR:
+            // Handle error codes
             ESP_LOGI(TAG, "MQTT Error");
             if (event->error_handle->error_type == MQTT_ERROR_TYPE_TCP_TRANSPORT) {
-                //ESP_LOGI(TAG, "Last error code reported from esp-tls: 0x%x", event->error_handle->esp_tls_last_esp_err);
                 ESP_LOGI(TAG, "Last tls stack error number: 0x%x", event->error_handle->esp_tls_stack_err);
                 ESP_LOGI(TAG, "Last captured errno : %d (%s)", event->error_handle->esp_transport_sock_errno,
                          strerror(event->error_handle->esp_transport_sock_errno));

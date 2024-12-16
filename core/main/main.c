@@ -19,7 +19,7 @@
 #include "led.h"
 
 
-static const char *TAG = "main";
+static const char *TAG = "Core";
 
 typedef struct {
     uint8_t id;
@@ -33,8 +33,12 @@ void read_voltage_task(void *taskParameters) {
     Message_t messageToSend;
 
     for (;;) {
-        uint8_t id = (uint8_t)(rand() % 256);
+        // Since we don't have actual sensors, just generate a random sensor ID and voltage
+        // In reality, there would be one task per sensor doing this, or an GPIO interrupt
+        uint8_t id = (uint8_t)(rand() % 20) + 1;
         float value = (float)rand() / RAND_MAX * 5;
+        // Get current timestamp - note, doesn't use NTP, so this is not actually accurate
+        // But can be used to gauge time intervals
         struct timeval tv_now;
         gettimeofday(&tv_now, NULL);
         int64_t time_us = (int64_t)tv_now.tv_sec * 1000000L + (int64_t)tv_now.tv_usec;
@@ -55,13 +59,13 @@ void transmit_voltage_task(void *taskParameters) {
     Message_t receivedMessage;
 
     for (;;) {
+        // Receive message and send to MQTT
         if (xQueueReceive(xQueue, &receivedMessage, portMAX_DELAY) == pdPASS) {
             // Received message
             mqtt_handler_publish(receivedMessage.id, receivedMessage.value, receivedMessage.timestamp);
         }
     }
 }
-
 
 
 static void blink_task(void *taskParameters) {
@@ -90,13 +94,8 @@ void app_main(void)
     wifi_init_sta();
 
 
-    mqtt_handler_config_t config = {
-        .host = "mqtt://192.168.4.254:1883",
-        .topic = "test_topic"
-    };
-
-
-    mqtt_handler_initialize(config);
+    // Init MQTT
+    mqtt_handler_initialize("mqtt://192.168.4.254:1883");
     mqtt_handler_start();
 
     xQueue = xQueueCreate(30, sizeof(Message_t));
@@ -105,7 +104,7 @@ void app_main(void)
         return;
     }
 
-    //xTaskCreate(blink_task, "blink_task", 1024, NULL, tskIDLE_PRIORITY, NULL);
+    xTaskCreate(blink_task, "blink_task", 1024, NULL, tskIDLE_PRIORITY, NULL);
     xTaskCreate(read_voltage_task, "read_voltage_task", 4096, NULL, tskIDLE_PRIORITY, NULL);
     xTaskCreate(transmit_voltage_task, "transmit_voltage_task", 4096, NULL, tskIDLE_PRIORITY, NULL);
 

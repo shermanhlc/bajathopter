@@ -3,12 +3,8 @@
 
 #include "esp_err.h"
 
-typedef struct {
-    char* host;
-    char* topic;
-} mqtt_handler_config_t;
 
-esp_err_t mqtt_handler_initialize(mqtt_handler_config_t mqtt_config);
+esp_err_t mqtt_handler_initialize(const char* host);
 
 esp_err_t mqtt_handler_start(void);
 

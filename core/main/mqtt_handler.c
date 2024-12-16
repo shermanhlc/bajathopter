@@ -9,7 +9,6 @@
 
 #define TOPIC "/topic/sensors"
 
-static mqtt_handler_config_t mqtt_handler_config;
 static esp_mqtt_client_handle_t mqtt_client;
 
 static void event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void* event_data) {
@@ -28,7 +27,6 @@ static void event_handler(void *handler_args, esp_event_base_t base, int32_t eve
         case MQTT_EVENT_ERROR:
             ESP_LOGI(TAG, "MQTT Error");
             if (event->error_handle->error_type == MQTT_ERROR_TYPE_TCP_TRANSPORT) {
-                //ESP_LOGI(TAG, "Last error code reported from esp-tls: 0x%x", event->error_handle->esp_tls_last_esp_err);
                 ESP_LOGI(TAG, "Last tls stack error number: 0x%x", event->error_handle->esp_tls_stack_err);
                 ESP_LOGI(TAG, "Last captured errno : %d (%s)", event->error_handle->esp_transport_sock_errno,
                          strerror(event->error_handle->esp_transport_sock_errno));
@@ -43,9 +41,9 @@ static void event_handler(void *handler_args, esp_event_base_t base, int32_t eve
     }
 }
 
-esp_err_t mqtt_handler_initialize(const mqtt_handler_config_t config) {
+esp_err_t mqtt_handler_initialize(const char* host) {
     esp_mqtt_client_config_t mqtt_config = {
-        .broker.address.uri = config.host
+        .broker.address.uri = host
     };
 
     mqtt_client = esp_mqtt_client_init(&mqtt_config);
@@ -66,6 +64,7 @@ void mqtt_handler_stop(void) {
 }
 
 esp_err_t mqtt_handler_publish(uint8_t id, float value, int64_t timestamp) {
+    // Format data to JSON and publish
     cJSON *json = cJSON_CreateObject();
     cJSON_AddNumberToObject(json, "sensor_id", id);
     cJSON_AddNumberToObject(json, "sensor_voltage", value);

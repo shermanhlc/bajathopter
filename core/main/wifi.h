@@ -15,9 +15,9 @@
 #include "lwip/sys.h"
 
 /* WiFi configuration through project configuration*/
-#define ESP_WIFI_SSID                       CONFIG_ESP_WIFI_SSID
-#define ESP_WIFI_PASS                       CONFIG_ESP_WIFI_PASSWORD
-#define ESP_MAXIMUM_RETRY                   CONFIG_ESP_MAXIMUM_RETRY
+#define ESP_WIFI_SSID                       "test_wifi_network"
+#define ESP_WIFI_PASS                       "test_password"
+#define ESP_MAXIMUM_RETRY                   5
 #define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD   WIFI_AUTH_WPA2_PSK
 
 

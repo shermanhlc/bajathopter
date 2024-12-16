@@ -37,3 +37,7 @@
 # esp-idf
 build/
 *.old
+
+# rust
+**/target
+**/database.db*

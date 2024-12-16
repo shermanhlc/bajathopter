@@ -19,12 +19,11 @@
 Message_t messageArray[ARRAY_SIZE];
 int currentIndex = 0;
 
-static const char *TAG = "transmitter";
+static const char *TAG = "Transmitter";
 
 
 extern QueueHandle_t xQueue;
 SemaphoreHandle_t xSemaphoreFull;
-SemaphoreHandle_t xMutex;
 
 TaskHandle_t queueReceiveTaskHandle = NULL;
 
@@ -49,10 +48,7 @@ static void transmitter_queue_receive_task(void) {
                 ESP_LOGI(TAG, "Handling buffer add");
                 ESP_LOGI(TAG, "BUFFER SIZE: %d", currentIndex);
                 if (currentIndex == ARRAY_SIZE) {
-                    xSemaphoreGive(xMutex);
                     xSemaphoreGive(xSemaphoreFull);
-
-                    //vTaskSuspend(queueReceiveTaskHandle);
                 }
         }
     }
@@ -62,6 +58,7 @@ static void array_full_task(void) {
     char* jsonString = NULL;
 
     while (1) {
+        // Wait until signal indicating array is full
         if (xSemaphoreTake(xSemaphoreFull, portMAX_DELAY) == pdTRUE) {
 
             ESP_LOGI(TAG, "Preparing JSON Data");
@@ -81,10 +78,7 @@ static void array_full_task(void) {
             jsonString = cJSON_PrintUnformatted(root);
 
             currentIndex = 0;
-            xSemaphoreTake(xSemaphoreFull, 0);
-            //xSemaphoreGive(xMutex);
-            //vTaskResume(queueReceiveTaskHandle);
-            //xTaskResumeFromISR(queueReceiveTaskHandle);
+            xSemaphoreTake(xSemaphoreFull, 0); // Reset semaphore
 
             cJSON_Delete(root);
 
@@ -117,7 +111,6 @@ static void array_full_task(void) {
 
 void transmitter_init(void) {
     xSemaphoreFull = xSemaphoreCreateBinary();
-    xMutex = xSemaphoreCreateMutex();
     xTaskCreate(transmitter_queue_receive_task, "transmitter_queue_receive_task", 16384, NULL, tskIDLE_PRIORITY + 1, &queueReceiveTaskHandle);
     xTaskCreate(array_full_task, "array_full_task", 16384, NULL, tskIDLE_PRIORITY + 2, NULL);
 

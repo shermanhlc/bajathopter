@@ -19,15 +19,11 @@
 #include "mqtt.h"
 #include "transmitter.h"
 
-static const char *TAG = "example";
+static const char *TAG = "Banshee";
 
 extern QueueHandle_t xQueue;
 
-
-/* Use project configuration menu (idf.py menuconfig) to choose the GPIO to blink,
-   or you can edit the following line and set a number here.
-*/
-#define BLINK_GPIO CONFIG_BLINK_GPIO
+#define BLINK_GPIO 38
 
 static uint8_t s_led_state = 0;
 
@@ -63,17 +59,6 @@ static void configure_led(void)
     led_strip_clear(led_strip);
 }
 
-static void temp_task() {
-    Message_t receivedMessage;
-
-    for (;;) {
-        if (xQueueReceive(xQueue, &receivedMessage, portMAX_DELAY) == pdPASS) {
-            ESP_LOGI(TAG, "Message Received, id = %d, voltage = %f", receivedMessage.id, receivedMessage.value);
-        }
-    }
-}
-
-
 void app_main(void)
 {
 
@@ -90,14 +75,16 @@ void app_main(void)
 
     /* Configure the peripheral according to the LED type */
     configure_led();
+
+    // Initialize MQTT handling
     mqtt_handler_initialize("mqtt://192.168.4.254:1883");
     mqtt_handler_start();
     mqtt_handler_subscribe("/topic/sensors");
     
+    // Initialize transmitter
     transmitter_init();
 
     while (1) {
-        //ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
         blink_led();
         /* Toggle the LED state */
         s_led_state = !s_led_state;

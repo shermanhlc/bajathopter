@@ -2,7 +2,8 @@
 
 #include "led_strip.h"
 #include "esp_log.h"
-#define BLINK_GPIO 38
+
+#define BLINK_GPIO 6
 
 static uint8_t led_state = 0;
 
