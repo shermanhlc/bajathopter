@@ -13,8 +13,6 @@ namespace comms {
             EspIDFComms(wifi_config_t wifi_config, wifi_mode_t mode = WIFI_MODE_NULL);
             // EspIDFComms(std::sring& ssid, std::string& password, wifi_mode_t mode = WIFI_MODE_NULL)
 
-            ~EspIDFComms() = default;
-
             /**
              * @brief Starts the wifi interface based on the type (station/AP). If the function fails, it will abort.
              * 
