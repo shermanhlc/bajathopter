@@ -8,12 +8,6 @@ A multipart software suite that provides live information and data aquisition fo
    - BANSHEE
    - BEACON
 3. [Getting Started](#getting-started)
-4. [Installation](#installation)
-5. [Usage](#usage)
-6. [Contributing](#contributing)
-7. [License](#license)
-8. [Changelog](#changelog)
-9. [Contact](#contact)
 
 ## Project Overview
 Bajathopter is a three-part software suite that is design to record, transmit, and display live data from a wide range of sensors, specifically made with the SAE Baja competition. 
